@@ -9,10 +9,12 @@
         margin: 0;
         padding: 0;
       }
+
       body {
         background-color: #202020;
         color: aliceblue;
       }
+
       nav {
         height: 80px;
         padding: 0 20px;
@@ -22,28 +24,35 @@
         justify-content: space-between;
         align-items: center;
       }
+
       .title {
         font-size: 24px;
       }
+
       .signs {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         width: 200px;
       }
+
       button {
         padding: 5px 10px;
         border-radius: 2rem;
       }
     </style>
   </head>
+
   <body>
     <nav>
       <div class="title">MapIt</div>
-      <div class="signs">
-        <div class="signup"><button>Sign-Up</button></div>
-        <div class="signin"><button>Sign-In</button></div>
+      <div class="signup">
+        <a href="/signup"><button>Sign-Up</button></a>
+      </div>
+      <div class="signin">
+        <a href="/signin"><button>Sign-In</button></a>
       </div>
     </nav>
+    <%= successMsg %>
   </body>
 </html>

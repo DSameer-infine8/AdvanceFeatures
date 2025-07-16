@@ -4,21 +4,11 @@ const port = process.env.PORT;
 
 const express = require("express");
 const multer  = require('multer');
-
-// Configure storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "public/uploads");
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname); // Extract file extension
-    const uniqueName = Date.now() + ext;
-    cb(null, uniqueName);
-  }
-});
-
-const upload = multer({ storage })
 const app = express();
+const {storage} = require("./cloudConfig.js");
+const upload = multer({ storage: storage });
+ 
+
 const path = require("path");
 const mongoose = require('mongoose');
 const methodOverride = require("method-override");
@@ -32,7 +22,6 @@ const User = require("./models/user.js");
 app.set("views", path.join(__dirname,"views"));
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "public")));
-app.use('/uploads', express.static('public/uploads'));
 app.use(express.urlencoded({extended:true}));
 app.use(methodOverride("_method"));
 
@@ -43,6 +32,7 @@ const main = async() =>{
 main()
 .then(() => {console.log("Connection Successfull");})
 .catch((err)=>{console.log(err)});
+
 
 const sessionOpts = {
     secret:"mysupersecretstring", resave:false, saveUninitialized:true,
@@ -78,7 +68,7 @@ app.get("/",(req,res)=>{
 app.post("/signup", upload.single('profilePic'),async(req,res)=>{
     try{
         let {firstName, lastName, email, password} = req.body;
-        const profilePicPath = req.file ? `/uploads/${req.file.filename}` : null;
+        const profilePicPath = req.file ? req.file.path : null;
         const newUser = new User({username:email,firstName, lastName, email,profilePic: profilePicPath});
         const registerUser = await User.register(newUser, password);
         console.log(registerUser);
